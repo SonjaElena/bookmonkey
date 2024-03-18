@@ -8,16 +8,14 @@ console.log(isbn);
 loadBook();
 
 async function loadBook() {
-  try {
-    const fetchedBook = await fetch(urlBooks + isbn);
-    book = await fetchedBook.json();
-    displayBook();
-  } catch (error) {
-    console.error("Problem loading book", error);
-  }
+  const fetchedBook = await fetch(urlBooks + isbn);
+  const response = await fetchedBook.json();
+  book = response;
+  console.log(book);
+  displayBook();
 }
 
-function thatBook() {
+function displayBook() {
   const bookCard = document.createElement("article");
   bookCard.classList.add("book-information");
 
@@ -28,16 +26,19 @@ function thatBook() {
   const author = document.createElement("p");
   author.textContent = book.author;
   author.id = "book-author";
+  const lineBreak = document.createElement("br");
 
   const isbnBook = document.createElement("p");
-  isbnBook.textContent = book.isbn;
+  isbnBook.textContent = "ISBN: " + book.isbn;
   isbnBook.id = "book-isbn";
+
+  const subtitle = document.createElement("h3");
+  subtitle.textContent = "Ausschnitt: ";
 
   const abstract = document.createElement("p");
   abstract.textContent = book.abstract;
   abstract.classList.add("book-description");
 
-  bookCard.append(title, author, isbnBook, abstract);
-  document.main.appendChild(bookCard);
-  // document.querySelector("main").appendChild(bookCard);
+  bookCard.append(title, author, lineBreak, isbnBook, subtitle, abstract);
+  document.querySelector("main").appendChild(bookCard);
 }

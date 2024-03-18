@@ -1,6 +1,7 @@
 const htmlList = document.querySelector("#books-list");
 const books = []; //alternative let books, dann kann man books = jsonBooks machen
-const urlBooks = "http://localhost:4730/books";
+const urlBooks = "http://localhost:4730/books/";
+let favList = [];
 
 loadBooks();
 
@@ -28,9 +29,8 @@ function displayBooks() {
     // Link zu Book page
     const linkInfo = document.createElement("a");
     linkInfo.innerHTML = "Read more...";
-    linkInfo.href = window.location.origin + "/book.html?isbn=" + book.isbn;
-
-    console.log(linkInfo);
+    linkInfo.href =
+      "http://127.0.0.1:5500/bookmonkey/books.html?isbn=" + book.isbn;
 
     //Author
     const bAuthor = document.createElement("p");
@@ -45,6 +45,7 @@ function displayBooks() {
     favBtn.addEventListener("click", addfav);
     favBtn.innerHTML = "Add to Favorites";
     favBtn.setAttribute("fav", "false");
+    favBtn.setAttribute("id", iSBN.textContent);
 
     //Add together
     header.append(bTitle, bAuthor);
@@ -56,12 +57,25 @@ function displayBooks() {
 function addfav(event) {
   const favBtn = event.target;
   const isFav = favBtn.getAttribute("fav") === "true";
+  const isbn = favBtn.getAttribute("id");
+  console.log(isbn);
 
+  // change button text
+  // change favorite status
   if (isFav) {
     favBtn.innerHTML = "Add to Favorites";
     favBtn.setAttribute("fav", "false");
+    favList.push(isbn);
+    favList.push(isbn);
   } else {
     favBtn.innerHTML = "Remove from Favorites";
     favBtn.setAttribute("fav", "true");
+    favList = favList.filter((item) => item !== isbn);
   }
+  console.log(favList);
+  saveData();
+}
+
+function saveData() {
+  localStorage.setItem("bookfavorites", favList);
 }
